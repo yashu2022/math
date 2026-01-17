@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Master 🧮 - AI-Powered Math Game for Kids</title>
+    <meta name="description" content="An exciting AI-powered math game for kids with multiple difficulty levels, game modes, and intelligent hints powered by Gemini AI">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Particles -->
+    <div id="particles"></div>
+
+    <!-- Mascot Character -->
+    <div id="mascot" class="mascot">
+        <div class="mascot-face">
+            <div class="mascot-eyes">
+                <div class="eye left"></div>
+                <div class="eye right"></div>
+            </div>
+            <div class="mascot-mouth happy"></div>
+        </div>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="startScreen" class="screen active">
+        <h1 class="game-title bounce">Math Master 🧮</h1>
+        
+        <div class="start-container">
+            <div class="input-group">
+                <label for="playerName">What's your name, Math Champion?</label>
+                <input type="text" id="playerName" placeholder="Enter your name" maxlength="20">
+            </div>
+
+            <div class="avatar-selection">
+                <h3>Choose Your Avatar</h3>
+                <div class="avatar-grid">
+                    <div class="avatar" data-avatar="🦊">🦊</div>
+                    <div class="avatar" data-avatar="🐼">🐼</div>
+                    <div class="avatar" data-avatar="🦁">🦁</div>
+                    <div class="avatar" data-avatar="🐸">🐸</div>
+                    <div class="avatar" data-avatar="🦄">🦄</div>
+                    <div class="avatar" data-avatar="🐨">🐨</div>
+                </div>
+            </div>
+
+            <button id="startBtn" class="btn btn-primary btn-large" disabled>Start Game</button>
+            <button id="howToPlayBtn" class="btn btn-secondary">How to Play</button>
+
+            <div class="high-scores">
+                <h3>🏆 High Scores</h3>
+                <div id="highScoresList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Difficulty Selection Screen -->
+    <div id="difficultyScreen" class="screen">
+        <h2>Choose Your Challenge</h2>
+        
+        <div class="difficulty-grid">
+            <div class="difficulty-card" data-difficulty="easy">
+                <div class="stars">⭐</div>
+                <h3>Easy</h3>
+                <p>Numbers 1-10</p>
+                <p>Addition & Subtraction</p>
+            </div>
+            <div class="difficulty-card" data-difficulty="medium">
+                <div class="stars">⭐⭐</div>
+                <h3>Medium</h3>
+                <p>Numbers 1-50</p>
+                <p>All Basic Operations</p>
+            </div>
+            <div class="difficulty-card" data-difficulty="hard">
+                <div class="stars">⭐⭐⭐</div>
+                <h3>Hard</h3>
+                <p>Numbers 1-100</p>
+                <p>Order of Operations</p>
+            </div>
+            <div class="difficulty-card ai-challenge" data-difficulty="ai">
+                <div class="stars">⭐⭐⭐⭐</div>
+                <h3>AI Challenge</h3>
+                <p>AI Word Problems</p>
+                <p>Powered by Gemini 🤖</p>
+            </div>
+        </div>
+
+        <button id="backToDifficultyBtn" class="btn btn-back">← Back</button>
+    </div>
+
+    <!-- Game Mode Selection Screen -->
+    <div id="gameModeScreen" class="screen">
+        <h2>Select Game Mode</h2>
+        
+        <div class="mode-grid">
+            <div class="mode-card" data-mode="practice">
+                <div class="mode-icon">🎯</div>
+                <h3>Practice Mode</h3>
+                <p>No timer, unlimited hints</p>
+                <p class="mode-detail">Perfect for learning!</p>
+            </div>
+            <div class="mode-card" data-mode="timeattack">
+                <div class="mode-icon">⚡</div>
+                <h3>Time Attack</h3>
+                <p>60 seconds challenge</p>
+                <p class="mode-detail">How many can you solve?</p>
+            </div>
+            <div class="mode-card" data-mode="challenge">
+                <div class="mode-icon">💪</div>
+                <h3>Challenge Mode</h3>
+                <p>10 questions, 3 lives</p>
+                <p class="mode-detail">Test your skills!</p>
+            </div>
+            <div class="mode-card" data-mode="daily">
+                <div class="mode-icon">📅</div>
+                <h3>Daily Challenge</h3>
+                <p>Special AI problems</p>
+                <p class="mode-detail">New every day!</p>
+            </div>
+        </div>
+
+        <button id="backToModeBtn" class="btn btn-back">← Back</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="gameScreen" class="screen">
+        <div class="game-header">
+            <div class="game-info">
+                <div class="player-info">
+                    <span id="playerAvatar" class="player-avatar"></span>
+                    <span id="playerNameDisplay" class="player-name"></span>
+                </div>
+                <div id="timerDisplay" class="timer">⏱️ <span id="timeLeft">60</span>s</div>
+                <div id="livesDisplay" class="lives"></div>
+            </div>
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-label">Score</span>
+                    <span id="scoreDisplay" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Streak</span>
+                    <span id="streakDisplay" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Question</span>
+                    <span id="questionNumber" class="stat-value">1/10</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="progressBar" class="progress-bar">
+            <div id="progressFill" class="progress-fill"></div>
+        </div>
+
+        <div class="game-content">
+            <div id="problemDisplay" class="problem-display">
+                <div id="wordProblem" class="word-problem"></div>
+                <div id="mathProblem" class="math-problem">5 + 3 = ?</div>
+            </div>
+
+            <div class="answer-section">
+                <input type="number" id="answerInput" class="answer-input" placeholder="Your answer">
+                <button id="submitBtn" class="btn btn-submit">Submit</button>
+            </div>
+
+            <div class="hint-section">
+                <button id="hintBtn" class="btn btn-hint">💡 Need a Hint?</button>
+                <div id="hintDisplay" class="hint-display"></div>
+            </div>
+
+            <div id="numberPad" class="number-pad">
+                <button class="num-btn" data-num="7">7</button>
+                <button class="num-btn" data-num="8">8</button>
+                <button class="num-btn" data-num="9">9</button>
+                <button class="num-btn" data-num="4">4</button>
+                <button class="num-btn" data-num="5">5</button>
+                <button class="num-btn" data-num="6">6</button>
+                <button class="num-btn" data-num="1">1</button>
+                <button class="num-btn" data-num="2">2</button>
+                <button class="num-btn" data-num="3">3</button>
+                <button class="num-btn clear-btn" data-num="clear">C</button>
+                <button class="num-btn" data-num="0">0</button>
+                <button class="num-btn" data-num="-">-</button>
+            </div>
+        </div>
+
+        <button id="quitGameBtn" class="btn btn-back">← Quit Game</button>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="screen">
+        <h2>Game Over!</h2>
+        
+        <div class="results-container">
+            <div class="final-score">
+                <h3>Final Score</h3>
+                <div id="finalScore" class="score-big">0</div>
+            </div>
+
+            <div class="results-stats">
+                <div class="result-stat">
+                    <span class="result-label">Questions Answered</span>
+                    <span id="questionsAnswered" class="result-value">0</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-label">Correct Answers</span>
+                    <span id="correctAnswers" class="result-value">0</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-label">Accuracy</span>
+                    <span id="accuracy" class="result-value">0%</span>
+                </div>
+                <div class="result-stat">
+                    <span class="result-label">Best Streak</span>
+                    <span id="bestStreak" class="result-value">0</span>
+                </div>
+            </div>
+
+            <div id="newBadges" class="new-badges"></div>
+
+            <div class="results-actions">
+                <button id="playAgainBtn" class="btn btn-primary">Play Again</button>
+                <button id="viewStatsBtn" class="btn btn-secondary">View Stats</button>
+                <button id="backToMenuBtn" class="btn btn-back">Main Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Screen -->
+    <div id="statsScreen" class="screen">
+        <h2>Your Progress</h2>
+        
+        <div class="stats-container">
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="totalQuestions">0</span>
+                        <span class="stat-text">Total Questions</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="totalAccuracy">0%</span>
+                        <span class="stat-text">Overall Accuracy</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="longestStreak">0</span>
+                        <span class="stat-text">Longest Streak</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏰</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="timeSpent">0</span>
+                        <span class="stat-text">Minutes Played</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="badges-section">
+                <h3>🏅 Achievements</h3>
+                <div id="badgesDisplay" class="badges-grid"></div>
+            </div>
+
+            <div class="leaderboard-section">
+                <h3>🏆 Leaderboard</h3>
+                <div class="difficulty-filter">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="easy">Easy</button>
+                    <button class="filter-btn" data-filter="medium">Medium</button>
+                    <button class="filter-btn" data-filter="hard">Hard</button>
+                    <button class="filter-btn" data-filter="ai">AI</button>
+                </div>
+                <div id="leaderboardDisplay" class="leaderboard-list"></div>
+            </div>
+        </div>
+
+        <button id="backFromStatsBtn" class="btn btn-back">← Back</button>
+    </div>
+
+    <!-- How to Play Modal -->
+    <div id="howToPlayModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>How to Play Math Master 🧮</h2>
+            <div class="instructions">
+                <div class="instruction-step">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <h4>Choose Your Difficulty</h4>
+                        <p>Select from Easy, Medium, Hard, or AI Challenge based on your skill level.</p>
+                    </div>
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <h4>Pick a Game Mode</h4>
+                        <p>Practice without pressure, race against time, or take on challenges!</p>
+                    </div>
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <h4>Solve Math Problems</h4>
+                        <p>Answer questions correctly to earn points and build your streak!</p>
+                    </div>
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">4</span>
+                    <div class="step-content">
+                        <h4>Use AI Hints</h4>
+                        <p>Stuck? Click the hint button for step-by-step help from our AI!</p>
+                    </div>
+                </div>
+                <div class="instruction-step">
+                    <span class="step-number">5</span>
+                    <div class="step-content">
+                        <h4>Earn Badges</h4>
+                        <p>Unlock achievements by reaching milestones and showing your skills!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Overlay -->
+    <div id="feedbackOverlay" class="feedback-overlay"></div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <!-- Audio Elements -->
+    <audio id="bgMusic" loop>
+        <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGGS57OihUBELTKXh8bllHAU2jdXzzn0vBSh+zPDajzsKFF+16+qnVRQLRp/g8r5sIQUrgc7y2Yk2CBhkuezooVARDEyl4fG5ZRwFNo3V8859LwUnfszw2o87ChRftevqp1UVC0af4PK+bCEFK4HO8tmJNggYZLns6KFQEQxMpeHxuWUcBTaN1fPOfS8FJ37M8NqPOwoUX7Xr6qdVFQtGn+DyvmwhBSuBzvLZiTYIGGS57OihUBEMTKXh8bllHAU2jdXzzn0vBSd+zPDajzsKFF+16+qnVRULRp/g8r5sIQUrgc7y2Yk2CBhkuezooVARDEyl4fG5ZRwFNo3V8859LwUnfszw2o87ChRftevqp1UVC0af4PK+bCEFK4HO8tmJNggYZLns6KFQEQxMpeHxuWUcBTaN1fPOfS8FJ37M8NqPOwoUX7Xr6qdVFQtGn+DyvmwhBSuBzvLZiTYIGGS57OihUBEMTKXh8bllHAU2jdXzzn0vBSd+zPDajzsKFF+16+qnVRULRp/g8r5sIQUrgc7y2Yk2CBhkuezooVARDEyl4fG5ZRwFNo3V8859LwUnfszw2o87ChRftevqp1UVC0af4PK+bCEFK4HO8tmJNggYZLns6KFQEQxMpeHxuWUcBTaN1fPOfS8FJ37M8NqPOwoUX7Xr6qdVFQtGn+DyvmwhBSuBzvLZiTYIGGS57OihUBEMTKXh8bllHAU2jdXzzn0vBSd+zPDajzsKFF+16+qnVRULRp/g8r5sIQUrgc7y2Yk2CBhkuezooVARDEyl4fG5ZRwFNo3V8859LwUnfszw2o87ChRftevqp1UVC0af4PK+bCEFK4HO8tmJNggYZLns6KFQEQxMpeHxuWUcBTaN1fPOfS8FJ37M8NqPOwoUX7Xr6qdVFQtGn+DyvmwhBSuBzvLZiTYIGGS57OihUBEMTKXh8bllHAU2jdXzzn0vBSd+zPDajzsKFF+16+qnVRULRp/g8r5sIQUrgc7y2Yk2CBhkuezooVARDEyl4fG5ZRwFNo3V8859LwUnfszw2o87ChRftevqp1UVC0af4PK+bCEFK4HO8tmJNggYZLns6KFQEQxMpeHxuWUcBTaN1fPOfS8FJ37M8NqPOwoUX7Xr6qdVFQtGn+DyvmwhBSuBzvLZiTYIGGS57OihUBEMTKXh8bllHAU2jdXzzn0vBSd+zPDajzsKFF+16+qnVRULRp/g8r5sIQUrgc7y2Yk2CBhkuezooVARDEyl4fG5ZRwFNo3V8859LwUnfszw2o87ChRftevqp1UVC0af4PK+bCEFK4HO8tmJNggYZLns6KFQEQxMpeHxuWUcBTaN1fPOfS8FJ37M8NqPOwoUX7Xr6qdVFQtGn+DyvmwhBSuBzvLZiTYIGGS57OihUBEMTKXh8bllHAU2jdXzzn0vBSd+zPDajzsKFF+16+qnVRULRp/g8r5sIQUrgc7y2Yk2CBhkuezooVARDEyl4fG5ZRwFNo3V8859LwUnfszw2o87ChRftevqp1UVC0af4PK+bCEFK4HO8tmJNggYZLns6KFQEQxMpeHxuWUcBTaN1fPOfS8FJ37M8NqPOwQ==" type="audio/wav">
+    </audio>
+    <audio id="correctSound" src="data:audio/wav;base64,UklGRhQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="></audio>
+    <audio id="wrongSound" src="data:audio/wav;base64,UklGRhQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="></audio>
+    <audio id="achievementSound" src="data:audio/wav;base64,UklGRhQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA="></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
